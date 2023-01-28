@@ -1,0 +1,71 @@
+/*
+ * Copyright (c) 2014 Cestar College.
+ */
+.datePicker {
+    -moz-user-focus: normal;
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    cursor: default;
+    padding: 0;
+    width: 170px;
+    background: url("images/brushed-medal.jpg") repeat scroll left top #ADBEBF;
+    border-color: #AABBBB #889999 #889999 #AABBBB;
+    border-style: solid;
+    border-width: 1px;
+    font-family: Arial, Helvetica, Verdana, sans-serif;
+    font-weight: bold;
+}
+
+.datePicker .header {
+    background: url("images/title-bg-brushed-metal.jpg") repeat scroll left top #B7BABF;
+}
+
+.datePicker .labelPopup{
+    background: url("images/brushed-medal.jpg") repeat scroll left top #ADBEBF;
+}
+
+.datePicker td .topLabel {
+    color : #000000;
+}
+
+.datePicker .grid td.selected {
+    background-color: #FFA200;
+    color: #FFFFFF;
+    text-shadow: none;
+}
+
+.datePicker a {
+    border: 0;
+}
+
+.datePicker .grid td {
+    font-size: 11px;
+    font-weight: bold !important;
+    color: #334444;
+    text-shadow: 0 -1px 1px #FFFFFF, 0 1px 1px #FFFFFF;
+    padding-top:1px;
+    padding-bottom:1px;
+    vertical-align: middle;
+    font:"";
+}
+
+.datePicker .grid td.red {
+    color: #ff4911;
+}
+
+.datePicker .grid td:hover { /* not work with IE */
+    background-color: #666666;
+    color : #FFFFFF;
+    text-shadow: none;
+}
+
+.datePicker .daysRow {
+    text-transform: uppercase;
+}
+
+.datePicker .gridTable {
+    border-collapse: collapse;
+}

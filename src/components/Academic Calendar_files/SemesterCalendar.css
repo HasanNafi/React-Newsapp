@@ -1,0 +1,173 @@
+/* classroom calendar*/
+DIV.instructors-container {
+    float:left;
+    border: ridge #A5C06A;
+    margin: 4px 10px 4px 4px;
+    padding: 4px;
+}
+
+DIV.instructors-container A {
+    color: gray;
+    text-decoration: none;
+}
+
+DIV.instructors-container A.conflicted {
+    color: red;
+}
+
+DIV.instructors-container A.assigned {
+    color: inherit;
+}
+
+DIV.instructor-unit-container {
+    float:left;
+}
+
+DIV.instructor-unit-container DIV.instructor-unit-day {
+    padding: 2px;
+    height: 120px;
+    width: 130px;
+    margin: 2px;
+    border: ridge #FFBD32;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+}
+
+DIV.instructor-unit-container DIV.room-unit-day {
+    padding: 2px;
+    height: 126px;
+    width: 150px;
+    margin: 2px;
+    border: ridge #FFBD32;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+}
+
+DIV.instructor-unit-day-title {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 1.2em;
+}
+
+DIV.instructor-unit-day-weekend {
+    background-color: #d3d3d3;
+}
+
+DIV.instructor-unit-day-holiday {
+    color: #FEFEFE;
+    background-color: #006400;
+}
+
+DIV.instructor-unit-day-unavailable {
+    color: #FEFEFE;
+    background-color: #919191;
+}
+
+DIV.instructor-unit-day-conflicted DIV.instructor-unit-day-title {
+    font-size: 1em;
+    padding-top: 1px;
+    padding-bottom: 0;
+}
+
+DIV.instructor-unit-day-conflicted {
+    color: #F1F1F1;
+    background-color: #EB1400;
+}
+
+DIV.instructor-unit-background-1 {
+    color: #F1F1F1;
+    background-color: #3f24ab;
+}
+
+DIV.instructor-unit-background-2 {
+    color: #000000;
+    background-color: #24ab89;
+}
+
+DIV.instructor-unit-background-3 {
+    color: #F1F1F1;
+    background-color: #ab5324;
+}
+
+DIV.instructor-unit-background-4 {
+    color: #000000;
+    background-color: #DDBD32;
+}
+
+DIV.instructor-unit-background-5 {
+    color: #F1F1F1;
+    background-color: #1692B8;
+}
+
+DIV.instructor-unit-background-6 {
+    color: #D0C7A6;
+    background-color: #3f24ab;
+}
+
+DIV.instructor-unit-background-7 {
+    color: #F1F1F1;
+    background-color: #24ab89;
+}
+
+DIV.instructor-unit-background-8 {
+    color: #000000;
+    background-color: #ab5324;
+}
+
+DIV.instructor-unit-background-9 {
+    color: #000033;
+    background-color: #66cc66;
+}
+
+DIV.instructor-unit-background-10 {
+    color: #99ff33;
+    background-color: #660099;
+}
+
+DIV.instructor-unit-background-11 {
+    color: #e4f2ed;
+    background-color: #3366ff;
+}
+
+DIV.instructor-unit-background-12 {
+    color: #00ff00;
+    background-color: #663399;
+}
+
+DIV.instructor-unit-background-13 {
+    color: #F1F1F1;
+    background-color: #0634b8;
+}
+
+DIV.instructor-unit-container DIV.shift {
+    height: 20px;
+    padding: 1px;
+    margin: 2px;
+    border: #16161c solid 1px;
+}
+
+DIV.instructor-unit-container DIV.shift-ignore {
+    height: 10px;
+}
+
+DIV.instructor-unit-container DIV.shift-conflict {
+    color: #F1F1F1;
+    background-color: #EB1400;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: x-small;
+}
+
+DIV.room-unit-day DIV.shift {
+    text-align: left;
+    padding: 2px;
+    overflow: hidden;
+    white-space:nowrap;
+}
+
+DIV.instructor-unit-container DIV.shift-extra {
+    color: #EB1400;
+    background-color: inherit;
+}

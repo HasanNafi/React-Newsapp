@@ -1,0 +1,150 @@
+/*
+ * Copyright (c) 2012. by Richard Yunhua Sang.
+ */
+
+/*ScruncherSettings Mappings="=" LineCompacting="TRUE"*/
+
+/* Link a zone to field value change. */
+
+T5.extendInitializers(function () {
+
+    function initializer(_specs) {
+        var _underscore = eval("T5._"); // to overcome scrunch issue.
+        var _elementId = _specs.elementId;
+        var _supplementAttribute= _specs.supplementAttribute;
+        var _zoneId = _specs.zoneId;
+        var _listenOnChangeEventOfTextField = _specs.listenOnChangeEventOfTextField;
+        var _valueChangeCallBackFunc = _specs.valueChangeCallBackFunc && eval("[" + _specs.valueChangeCallBackFunc + "][0]");
+        var _callbackAssigned = _valueChangeCallBackFunc && _underscore.isFunction(_valueChangeCallBackFunc);
+        var _paramName = _specs.paramName;
+        var _url = _specs.url;
+        var _deferRequestBy = _specs.deferRequestBy;
+        var _element = $(_elementId);
+        var _isDateField = _specs.isDateField || false;
+        $T(_element).zoneId = _zoneId;
+        var _currentValue = _element.value;
+        var _onChangeInterval;
+
+        var _onValueChange = function (_elementValue) {
+            clearInterval(_onChangeInterval);
+            _currentValue = _elementValue;
+            var url0;
+            var _supplementAttributeValue;
+            if (_zoneId) {
+                url0 = _url + (_url.include('?') ? '&' : '?') + _paramName + "=" + _elementValue + '&elementId=' + _elementId + '&callback=' + false;
+                if (_supplementAttribute) {
+                    _supplementAttributeValue = _element.readAttribute(_supplementAttribute);
+                    url0 = url0 + "&supplementAttribute=" + _supplementAttributeValue;
+                }
+                var _zoneObject = Tapestry.findZoneManager(_elementId);
+                if (!_zoneObject) return;
+                _zoneObject.updateFromURL(url0);
+            }
+            if (_callbackAssigned) {
+                url0 = _url + (_url.include('?') ? '&' : '?') + _paramName + "=" + _elementValue + '&elementId=' + _elementId + '&callback=' + true;
+                if (_supplementAttribute) {
+                    _supplementAttributeValue = _element.readAttribute(_supplementAttribute);
+                    url0 = url0 + "&supplementAttribute=" + _supplementAttributeValue;
+                }
+                Tapestry.ajaxRequest(url0, _valueChangeCallBackFunc);
+            }
+        };
+        var _onDateValueChange = function (_event) {
+            if (_event.memo && (_elementId === _event.memo.id)) {
+                var _elementValue;
+                _elementValue = _element.value;
+                if ((!_currentValue || _currentValue == '') && (!_elementValue || _elementValue == '')) {
+                    return;
+                }
+                clearInterval(_onChangeInterval);
+                if (_currentValue !== _elementValue) {
+                    if (_deferRequestBy > 0) {
+                        // Defer lookup in case when value changes very quickly:
+                        _onChangeInterval = setInterval((function () {
+                            _onValueChange(_elementValue);
+                        }), _deferRequestBy);
+                    } else {
+                        _onValueChange(_elementValue);
+                    }
+                }
+            }
+        };
+
+        var _onClick = function (_event) {
+            var _elementValue;
+            if (_element.type.toLowerCase() == "checkbox") {
+                _elementValue = _element.checked;
+            } else {
+                _elementValue = _element.value;
+                Event.stop(_event);
+            }
+            if ((!_currentValue || _currentValue == '') && (!_elementValue || _elementValue == '')) {
+                return;
+            }
+            clearInterval(_onChangeInterval);
+            if (_currentValue !== _elementValue) {
+                if (_deferRequestBy > 0) {
+                    // Defer lookup in case when value changes very quickly:
+                    _onChangeInterval = setInterval((function () {
+                        _onValueChange(_elementValue);
+                    }), _deferRequestBy);
+                } else {
+                    _onValueChange(_elementValue);
+                }
+            }
+        };
+
+        if (_element.tagName.toLowerCase() == "input" && _element.type.toLowerCase() == "text") {
+            if (_listenOnChangeEventOfTextField) {
+              Event.observe(_element, "change", function(_event) {
+                var _elementValue = $(_elementId).value;
+                _onValueChange(_elementValue);
+              });
+            }
+            Event.observe(_element, "keyup", function (_event) {
+
+                switch (_event.keyCode) {
+                    case 224:  // alt_tab
+                        return;
+                    case Event.KEY_ESC:
+                    case Event.KEY_TAB:
+                    case Event.KEY_RETURN:
+                    case Event.KEY_UP:
+                    case Event.KEY_DOWN:
+                    default:
+                }
+
+                Event.stop(_event);
+
+                var _elementValue = $(_elementId).value;
+                if ((!_currentValue || _currentValue == '') && (!_elementValue || _elementValue == '')) {
+                    return;
+                }
+
+                clearInterval(_onChangeInterval);
+                if (_currentValue !== _elementValue) {
+                    if (_deferRequestBy > 0) {
+                        // Defer lookup in case when value changes very quickly:
+                        _onChangeInterval = setInterval((function () {
+                            _onValueChange(_elementValue);
+                        }), _deferRequestBy);
+                    } else {
+                        _onValueChange(_elementValue);
+                    }
+                }
+            });
+        } else if (_element.type.toLowerCase() == "checkbox") {
+            Event.observe(_element, "click", _onClick);
+        } else {
+            Event.observe(_element, "change", _onClick);
+        }
+        if (_isDateField) {
+           Event.observe(document, Tapestry.FOCUS_CHANGE_EVENT, _onDateValueChange);
+        }
+    }
+
+    return {
+        apricotLinkTapestryZoneToField:initializer
+    };
+
+});

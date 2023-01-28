@@ -1,0 +1,107 @@
+/*** tree menu ***/
+/*** menu ***/
+.menuShell {
+    background:#afb6b8;
+    height:23px;
+}
+.menuShell .menuItem,
+.menuShell .menuItem:link,
+.menuShell .menuItem:visited,
+.menuShell .menuItem:hover,
+.menuShell .menuItem:active {
+    padding:2px 10px 2px 10px;
+    height:20px;
+    text-align:center;
+    font-family:inherit;
+    font-size:inherit;
+    background:none;
+    border:none;
+    color:#000;
+    margin:0 1px;
+    float:left;
+    text-decoration:none;
+}
+.menuShell .menuItemActive,
+.menuShell .menuItemActive:link,
+.menuShell .menuItemActive:visited,
+.menuShell .menuItemActive:hover,
+.menuShell .menuItemActive:active {
+    color:#fff;
+    background-color:#456;
+}
+.menuShell .menuItemWithChildren,
+.menuShell .menuItemWithChildren:link,
+.menuShell .menuItemWithChildren:visited,
+.menuShell .menuItemWithChildren:hover,
+.menuShell .menuItemWithChildren:active {
+    padding-right:20px;
+    background-image:url(../images/arrows-black-expanded.gif);
+    background-attachment:scroll;
+    background-repeat:no-repeat;
+    background-position:95% 50%;
+}
+.menuShell .divider {
+    font-size:0;
+    float:left;
+    height:20px;
+    margin:2px 4px;
+    border-left:solid 1px #aaa;
+    border-right:solid 1px #333;
+}
+
+/*** submenu ***/
+.subMenuShell {
+    display:none;
+    position:absolute;
+    padding:5px 0;
+    background:#c9cfd6 url(../images/tree-menu-bg.gif) repeat-x left top;
+    border:1px solid #dee;
+    border-right-color:#889094;
+    border-bottom-color:#889094;
+    box-shadow:0 0 20px rgba(0,0,0,.6);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,.6);
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,.6);
+    max-height:560px;
+    overflow:auto;
+}
+.subMenuShell .subMenuItem,
+.subMenuShell .subMenuItem:link,
+.subMenuShell .subMenuItem:visited,
+.subMenuShell .subMenuItem:hover,
+.subMenuShell .subMenuItem:active
+{
+    display:block;
+    padding:2px 45px 3px 10px;
+    margin:0 1px; /* NOTE: need a margin around links, or focus highlight causes menu shell to have scrollbars */
+    font-family:Arial;
+    font-size:12px;
+    color:#000;
+    border:none;
+    text-decoration:none;
+}
+.subMenuShell .subMenuItemActive,
+.subMenuShell .subMenuItemActive:link,
+.subMenuShell .subMenuItemActive:visited,
+.subMenuShell .subMenuItemActive:hover,
+.subMenuShell .subMenuItemActive:active
+{
+    color:#fff;
+    background-color:#788;
+}
+.subMenuShell .subMenuItemWithChildren,
+.subMenuShell .subMenuItemWithChildren:link,
+.subMenuShell .subMenuItemWithChildren:visited,
+.subMenuShell .subMenuItemWithChildren:hover,
+.subMenuShell .subMenuItemWithChildren:active {
+    background-image:url(../images/tree-menu-right-arrow.gif);
+    background-attachment:scroll;
+    background-repeat:no-repeat;
+    background-position:right center;
+}
+.subMenuShell .divider {
+    font-size:0;
+    line-height:0;
+    margin:4px 10px;
+    border-top:solid 2px #fff;
+    border-bottom:solid 2px #afbcc4;
+}

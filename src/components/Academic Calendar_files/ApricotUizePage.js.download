@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2012. Richard Yunhua Sang.
+ */
+
+/*ScruncherSettings Mappings="=f" LineCompacting="TRUE"*/
+
+/*
+ *  This is where the Apricot takes advantage of Uize and combines it with Tapestry.js.
+ *  Some hack way is taken to overcome some technical challenges, such as to properly address Ajax response.
+ */
+(function ($) {
+    var _Apricot = Apricot;
+// Store Uize required modules.
+    var _apricot_required = ['Uize.Node', 'Uize.Fx'];
+// Store Uize builder functions.
+    var _apricot_builders = [];
+// Store functions that will be executed after all widgets are wired.
+    var _apricot_after_wireUi = [];
+    Uize.wire(Apricot.APRICOT_MODULE, function (_event) {
+        var _required = _event.required;
+        if (_required) {
+            // In case to merge array, underscore has a function called intersect
+            Uize.isArray(_required) ? _Apricot.appendArray(_apricot_required, _required) : _apricot_required.push(_event.required);
+        }
+        _event.builder && _apricot_builders.push(_event.builder);
+        _event.afterWireUi && _apricot_after_wireUi.push(_event.afterWireUi);
+    });
+    Uize.fire({ name:Apricot.APRICOT_MODULE, required:'Apricot.Page'});
+
+// for reference : To hack tapestry init function, not work.
+// var _tapestryOnDomLoadedCallback = Tapestry.onDomLoadedCallback;
+// var _tapestryInit = Tapestry.init;
+// Tapestry.init = function () {
+//        _tapestryInit.apply(this, arguments);
+// }
+    var _Uize_Node = Uize.Node;
+    Uize.Node.wire(window, "load", function () {
+        Tapestry.pageLoaded = false;
+        var _t5_apricot = T5.apricot;
+        // patch for DateField positioning problem in IE8
+        if (_t5_apricot.isIE && _t5_apricot.IEVersion >= 8) {
+            if (Tapestry.DateField) Tapestry.DateField.prototype.positionPopup = function () { // to fix the popup lost-position issue within an absolute div.
+                var _this = this;
+                var _this_popup = _this.popup;
+                var _reference = _this.field.type == "text" ? _this.field : _this.trigger;
+                if (_this.apricotDateFieldInAbsoluteDiv == undefined) {
+                    var _parentElement = _reference.parentElement;
+                    var _isAbsolute = false;
+                    while (_parentElement.tagName != 'BODY') {
+                        if (_Uize_Node.getStyle(_parentElement, 'position') === "absolute") {
+                            _isAbsolute = true;
+                            break;
+                        } else {
+                            _parentElement = _parentElement.parentElement;
+                        }
+                    }
+                    _this.apricotDateFieldInAbsoluteDiv = _isAbsolute;
+                }
+                if (_this.apricotDateFieldInAbsoluteDiv) {
+                    _this_popup.style.left = _reference.offsetLeft;
+                    _this_popup.style.offsetTop = _reference.getHeight() + 2;
+                    _this_popup.style.width = "";
+                    _this_popup.style.height = "";
+                } else {
+                    _Uize_Node.setAbsPosAdjacentTo(_this_popup, _reference);
+                }
+            };
+        }
+
+        var _showFunc = Tapestry.ZoneManager.prototype.show; //Tapestry.js Hack, for RichTextEditor
+        Tapestry.ZoneManager.prototype.show = function () {
+            Uize.fire({name: _Apricot.APRICOT_BEFORE_ZONE_UPDATE, zoneId: this.element.id});
+            _showFunc.apply(this, arguments);
+        };
+
+        Uize.module({
+            required:_apricot_required,
+            builder:function () {
+                var _page;
+                if (window.apricotPage) {
+                    _page = window.apricotPage;
+                } else {
+                    _page = window.apricotPage = Apricot.Page();
+                }
+                if (!_page.isWired) { // to prevent Ajax call to wire again.
+                    for (var i = 0; i < _apricot_builders.length; i++) {
+                        var _fun = _apricot_builders[i];
+                        _fun.apply(this, arguments);
+                    }
+                    _page.wireUi();
+                    for (i = 0; i < _apricot_after_wireUi.length; i++) {
+                        _fun = _apricot_after_wireUi[i];
+                        _fun.apply(this, arguments);
+                    }
+                }
+                // Add a event before Zone get updated.
+                // to address Ajax requests
+                _apricot_required = [];
+                _apricot_builders = [];
+                _apricot_after_wireUi = [];
+                var _tapestryOnDomLoadedCallback = Tapestry.onDomLoadedCallback;
+                Tapestry.onDomLoadedCallback = function () { //Tapestry.js Hack
+                    _tapestryOnDomLoadedCallback.apply(this, arguments);
+                    for (var i = 0; i < _apricot_builders.length; i++) {
+                        var _fun = _apricot_builders[i];
+                        _fun.apply(this, arguments);
+                    }
+                    _page.wireUi();
+                    for (i = 0; i < _apricot_after_wireUi.length; i++) {
+                        _fun = _apricot_after_wireUi[i];
+                        _fun.apply(this, arguments);
+                    }
+                    _apricot_required = [];
+                    _apricot_builders = [];
+                    _apricot_after_wireUi = [];
+                };
+                Tapestry.pageLoaded = true;
+            }
+        });
+    });
+})(null);

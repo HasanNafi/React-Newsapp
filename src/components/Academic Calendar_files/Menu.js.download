@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2012. by Richard Yunhua Sang.
+ */
+
+/*ScruncherSettings Mappings="=" LineCompacting="TRUE"*/
+
+(function ($$) {
+
+    /** Container of functions that may be invoked by the Tapestry.init() function. */
+    T5.extendInitializers(function () {
+        function init(_specs) {
+
+            Uize.fire({
+                name:Apricot.APRICOT_MODULE,
+                required:'Uize.Widget.Tree.Menu',
+                builder:function () {
+                    var _page = window.apricotPage;
+                    var _container = _specs.container;
+                    _page.addChild(
+                        _container,
+                        Uize.Widget.Tree.Menu,
+                        {
+                            container:_container,
+                            items:_specs.items,
+                            menuCssClass:'menuShell',
+                            menuDividerClass:'divider',
+                            menuItemActiveCssClass:'menuItemActive',
+                            menuItemChildrenIndicatorCssClass:'menuItemWithChildren',
+                            menuItemCssClass:'menuItem',
+                            subMenuCssClass:'subMenuShell',
+                            subMenuDividerClass:'divider',
+                            subMenuItemActiveCssClass:'subMenuItemActive',
+                            subMenuItemChildrenIndicatorCssClass:'subMenuItemWithChildren',
+                            subMenuItemCssClass:'subMenuItem',
+                            built:false
+                        }
+                    );
+                }
+            });
+
+        }
+
+        return {
+            ApricotUizeMenu:init
+        }
+    });
+
+})(null);

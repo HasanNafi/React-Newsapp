@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2012. by Richard Yunhua Sang.
+ */
+
+/*ScruncherSettings Mappings="=d" LineCompacting="TRUE"*/
+
+Uize.module({
+    name:'Apricot.Page',
+    superclass:'Uize.Widget.Page',
+    required:'Uize.Comm.Ajax',
+    builder:function (_superclass) {
+        var _class = _superclass.subclass();
+        var _classPrototype = _class.prototype;
+        _class.set ({
+            confirmDialog:{widgetClassName:'Apricot.DialogConfirm'}
+        });
+        // copied and modified (add height, weight) from Uize.Widget.Page.js
+        _classPrototype._showConfirmDialog = function (_mode,_defaultState,_params) {
+            var _this = this;
+            _this.useDialog ({
+                component:_this.get('confirmDialog').component,
+                widgetClassName:_this.get('confirmDialog').widgetClassName || 'Uize.Widget.Dialog.Confirm',
+                widgetProperties:{
+                    name:'confirmDialog',
+                    title:_params.title || '',
+                    height:_params.height ,
+                    width:_params.width ,
+                    message:(_params.message + '').replace (/\n/g,'<br/>'),
+                    mode:_mode,
+                    state:_params.state || _defaultState,
+                    okText:_params.okText || _null,
+                    cancelText:_params.cancelText || _null
+                },
+                submitHandler:function (_confirmed) {
+                    var _handler = _params.callback || (_confirmed ? _params.yesHandler : _params.noHandler);
+                    _handler && _handler (_confirmed);
+                }
+            });
+        };
+        _classPrototype.showConfirm = function (_params) {
+            this._showConfirmDialog ('confirm','confirm',_params);
+            /*?
+             Instance Methods
+             showConfirm
+             Provides a hook to support the implementation of the =confirm= instance method of the =Uize.Widget= class.
+
+             NOTES
+             - this method is one of several `hook methods`
+             - see also the companion =showInform= hook method
+             */
+        };
+
+        _classPrototype.showInform = function (_params) {
+            this._showConfirmDialog ('alert','info',_params);
+            /*?
+             Instance Methods
+             showInform
+             Provides a hook to support the implementation of the =inform= instance method of the =Uize.Widget= class.
+
+             NOTES
+             - this method is one of several `hook methods`
+             - see also the companion =showConfirm= hook method
+             */
+        };
+        _classPrototype.performAjax = function (_serviceParams, _requestParams) {
+            var _ajax = Uize.Comm.Ajax();
+            _ajax.request({
+                url:[_serviceParams.serviceUrl, {q:'abc'}],
+                returnType:'json',
+                requestMethod:_requestParams.requestMethod || 'POST',
+                cache:'memory',
+             callback: _requestParams.callback});
+            /*?
+             Instance Methods
+             showInform
+             performAjax a hook to support the implementation of the =inform= instance method of the =Uize.Widget= class.
+
+             todo: not done yet.
+
+             */
+
+        };
+        return _class;
+    }
+});

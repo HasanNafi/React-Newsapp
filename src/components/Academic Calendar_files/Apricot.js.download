@@ -1,0 +1,218 @@
+/*
+ * Copyright (c) 2012. by Richard Yunhua Sang.
+ */
+
+/*ScruncherSettings Mappings="=b" LineCompacting="TRUE"*/
+
+(function (_$) {
+    // Event being fired after selected option within Select element changed.
+
+    var _apricot = T5.define("apricot", function () {
+    });
+
+    _apricot.isIE = Prototype && Prototype.Browser.IE;
+
+    _apricot.getIEVersionNumber = function () {
+        var _userAgent = navigator.userAgent;
+        if (window.attachEvent && _userAgent.indexOf('Opera') === -1) {
+            var MSIEOffset = _userAgent.indexOf("MSIE ");
+            return parseFloat(_userAgent.substring(MSIEOffset + 5, _userAgent.indexOf(";", MSIEOffset)));
+        } else {
+            return 0;
+        }
+    };
+
+    _apricot._underscore = eval('T5._'); //weird , but to overcome scrunch problem.
+
+    _apricot.IEVersion = _apricot.getIEVersionNumber();
+
+    _apricot.apricotCookie = function (_name, _value, _options) {
+        if (typeof _value != 'undefined') { // name and value given, set cookie
+            _options = _options || {};
+            if (_value === null) {
+                _value = '';
+                _options.expires = -1;
+            }
+            var _expires = '';
+            if (_options.expires && (typeof _options.expires == 'number' || _options.expires.toUTCString)) {
+                var _date;
+                if (typeof _options.expires == 'number') {
+                    _date = new Date();
+                    _date.setTime(_date.getTime() + (_options.expires * 24 * 60 * 60 * 1000));
+                } else {
+                    _date = _options.expires;
+                }
+                _expires = '; expires=' + _date.toUTCString();
+                // use expires attribute, max-age is not supported by IE
+            }
+            // CAUTION: Needed to parenthesize options.path and options.domain
+            // in the following expressions, otherwise they evaluate to undefined
+            // in the packed version for some reason...
+            var _path = _options.path ? '; path=' + (_options.path) : '';
+            var _domain = _options.domain ? '; domain=' + (_options.domain) : '';
+            var _secure = _options.secure ? '; secure' : '';
+            document.cookie = [_name, '=', encodeURIComponent(_value), _expires, _path, _domain, _secure].join('');
+        } else { // only name given, get cookie
+            var _cookieValue = null;
+            if (document.cookie) {
+                var _cookies = document.cookie.split(';');
+                for (var i = 0; i < _cookies.length; i++) {
+                    var _cookie = (_cookies[i]).strip();
+                    // Does this cookie string begin with the name we want?
+                    if (_cookie.substring(0, _name.length + 1) == (_name + '=')) {
+                        _cookieValue = decodeURIComponent(_cookie.substring(_name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return _cookieValue;
+        }
+    };
+
+    _apricot.dispatchDomEvent = function (_element, _event) {
+        if (document.createEvent) {
+            _element.dispatchEvent(_event);
+        } else {
+            _element.fireEvent(_event.eventType, _event);
+        }
+    };
+
+    _apricot.dispatchMouseEvent = function (_element, _eventName) {
+        if (document.createEvent) {
+            var _event = document.createEvent('MouseEvents');
+            _event.initEvent(_eventName, true, true);
+        } else { //IE, doesn't work on Submit for some reason.
+            _event = document.createEventObject();
+            _event.eventType = "on" + _eventName;
+        }
+        _apricot.dispatchDomEvent(_element, _event)
+    };
+
+    _apricot.dispatchHtmlEvent = function (_element, _eventName) {
+        if (document.createEvent) {
+            var _event = document.createEvent('HTMLEvents');
+            _event.initEvent(_eventName, true, true);
+        } else { // IE
+            _event = document.createEventObject();
+            _event.eventType = "on" + _eventName;
+        }
+        _apricot.dispatchDomEvent(_element, _event)
+    };
+
+    Uize && Uize.module({
+        name:'Apricot',
+        builder:function () {
+            var
+                _package = function () {
+                },
+                _eventPrototypeJS = Event
+            ;
+            _package.appendArray = function (_targetArray, _sourceArray) {
+                _targetArray.push.apply(_targetArray, _sourceArray.splice(0, Infinity));
+            };
+
+            _package.onTapestryEvent = function (_elementId, _eventName, _handler) {
+                _eventPrototypeJS.observe($(_elementId), _eventName, function () {
+                    if (_eventName === Tapestry.ZONE_UPDATED_EVENT) {
+                        if (_elementId === arguments[0].srcElement.id) {
+                            _handler.apply(this, arguments);
+                        }
+                    } else {
+                        _handler.apply(this, arguments);
+                    }
+
+                });
+            };
+
+            _package.getTapestryElement = function (_elementId) {
+                return $(_elementId);
+            };
+
+            _package.hideTapestryElement = function (_element) {
+                $(_element.id).hide();
+            };
+
+            _package.getUizePage = function () {
+                return window.apricotPage;
+            };
+
+            // return child widget from parent widget, with child's name is _name.
+            // todo implement deep search from children tree. e.g. by "page_widget1_widget2"
+            _package.getWidgetByName = function (_parentWidget, _name) {
+                return _parentWidget.children[_name];
+            };
+
+            // _idPrefix is the clientId (id, not t:id) of the component.
+            _package.getWidget = function (_idPrefix) {
+                var _page = window.apricotPage;
+                var _idPrefixOnPage = _page.get('idPrefix') + "_" + _idPrefix;
+                return _package.find(_page.children, function (_widget) {
+                    return _widget.get('idPrefix') == _idPrefixOnPage
+                });
+            };
+
+            // todo use the one in T5.apricot.
+            _package.dispatchDomEvent = function (_element, _event) {
+                if (document.createEvent) {
+                    _element.dispatchEvent(_event);
+                } else {
+                    _element.fireEvent(_event.eventType, _event);
+                }
+            };
+
+            _package.dispatchMouseEvent = function (_element, _eventName) {
+                if (document.createEvent) {
+                    var _event = document.createEvent('MouseEvents');
+                    _event.initEvent(_eventName, true, true);
+                } else { //IE, doesn't work on Submit for some reason.
+                    _event = document.createEventObject();
+                    _event.eventType = "on" + _eventName;
+                }
+                _package.dispatchDomEvent(_element, _event)
+            };
+
+            _package.dispatchHtmlEvent = function (_element, _eventName) {
+                if (document.createEvent) {
+                    var _event = document.createEvent('HTMLEvents');
+                    _event.initEvent(_eventName, true, true);
+                } else { // IE
+                    _event = document.createEventObject();
+                    _event.eventType = "on" + _eventName;
+                }
+                _package.dispatchDomEvent(_element, _event)
+            };
+
+            _package.find = _apricot._underscore.find;
+
+            _package.findInDynaForm = function(_f, _id) {
+                var _e = Uize.Node.find({
+                    root: _f,
+                    tagName: /INPUT|SELECT/,
+                    id: new RegExp("^" + _id + ".*$")
+                });
+                return _e[0]
+            };
+
+            _package.findElementInDynaForm = function(_f, _tagName, _id) {
+                var _e = Uize.Node.find({
+                    root: _f,
+                    tagName: _tagName,
+                    id: new RegExp("^" + _id + ".*$")
+                });
+                return _e[0]
+            };
+
+            /*** Constants ***/
+            // required event fired by Tapestry initializer.
+            _package.APRICOT_MODULE = 'apricot:required';
+
+            // after UI wired, the wired functions would like to be executed.
+            _package.APRICOT_AFTRE_WIRE_UI= 'apricot:after:ui';
+
+            // after UI wired, the wired functions would like to be executed.
+            _package.APRICOT_BEFORE_ZONE_UPDATE= 'apricot:beforeZoneUpdate';
+
+            return _package;
+        }
+    });
+})($);
