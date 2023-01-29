@@ -1,11 +1,11 @@
-// import React, { Component } from "react";
-// import DropdownButton from "react-bootstrap/DropdownButton";
+import React from "react";
+
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
 
     return (
-      <nav className="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+      <nav className="navbar fixed-top navbar-expand-lg bg-dark" data-bs-theme="dark">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             NewsDaily
@@ -20,17 +20,7 @@ const Navbar = () => {
                   Home
                 </Link>
               </li>
-              {/* <li className="nav-item dropdown">
-                <Link className="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Country
-                </Link>
-                <ul class="dropdown-menu">
-                    <li className="nav-item"><Link className="dropdown-item" to="/ca">Canada</Link></li>
-                    <li className="nav-item"><Link className="dropdown-item" to="/us">America</Link></li>
-                    <li className="nav-item"><Link className="dropdown-item" to="/in">India</Link></li>
-                    <li className="nav-item"><Link className="dropdown-item" to="/ru">Russia</Link></li>
-                </ul>
-              </li> */}
+             
               <li className="nav-item dropdown">
                 <Link className="nav-link dropdown-toggle" to="/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Category
