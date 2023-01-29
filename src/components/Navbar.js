@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+// import React, { Component } from "react";
 // import DropdownButton from "react-bootstrap/DropdownButton";
 import { Link } from 'react-router-dom';
 
-export class Navbar extends Component {
-  render() {
+const Navbar = () => {
+
     return (
       <nav className="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
         <div className="container-fluid">
@@ -50,7 +50,7 @@ export class Navbar extends Component {
         </div>
       </nav>
     );
-  }
+
 }
 
 export default Navbar;
